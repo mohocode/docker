@@ -1,0 +1,33 @@
+version: "3.6"
+
+services:
+
+  laravel:
+    image: lara-bionic-7.2:1
+    container_name : server
+    privileged: true
+    #restart: always
+
+    volumes:
+      - ./backend:/home/admin/web/public_html
+      # - ./config/apache/php.ini:/etc/php/8.2/apache2/php.ini
+
+    environment:
+      TERM: xterm 
+
+    ports:
+      - 8080:8080
+
+    command: apache2ctl -D FOREGROUND
+  
+  angular:
+    image: angular9-bionic:1
+    container_name : angular-server
+    restart: always
+
+    volumes:
+      - ./frontend:/home/node/angular
+      
+
+    ports:
+      - 4200:4200

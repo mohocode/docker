@@ -125,6 +125,10 @@ RUN apt-get -y install php8.2-common \
 # MYSQL 
 #-------------------------------------------
 RUN apt-get -y install php8.2-mongodb
+RUN apt-get update && apt-get install -y \
+    php8.2-mysql \
+    php8.2-pgsql
+
 
 
 # -----Restart Apache2------
@@ -158,6 +162,9 @@ RUN mkdir /home/admin/web/public_html/public
 # Absolutely necessary for upload process
 #------------------------------------------
 RUN chown -R admin:admin /home/admin/tmp
+RUN chown -R admin:admin /home/admin/web
+RUN chown -R admin:admin /home/admin/web/public_html
+RUN chown -R admin:admin /home/admin/conf
 
 # ----Add Nano ----
 RUN apt-get -y install nano
@@ -174,10 +181,12 @@ RUN bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/
 
 COPY ./shell/.bashrc /home/admin/.bashrc
 
-
+RUN composer global require laravel/installer
 
 
 USER root
+
+
 RUN apt-get update
 
 RUN mkdir -p /usr/local/nvm
@@ -192,14 +201,22 @@ RUN bash -c "source $NVM_DIR/nvm.sh && nvm install 22 && nvm alias default 22"
 
 # Make nvm available to all users (root & admin)
 RUN echo 'export NVM_DIR="/usr/local/nvm"' | tee -a /etc/profile.d/nvm.sh /root/.bashrc /home/admin/.bashrc && \
-    echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' | tee -a /etc/profile.d/nvm.sh /root/.bashrc /home/admin/.bashrc && \
-    echo 'export PATH="$NVM_DIR/versions/node/v22.14.0/bin:$PATH"' | tee -a /etc/profile.d/nvm.sh /root/.bashrc /home/admin/.bashrc
+echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' | tee -a /etc/profile.d/nvm.sh /root/.bashrc /home/admin/.bashrc && \
+echo 'export PATH="$NVM_DIR/versions/node/v22.14.0/bin:$PATH"' | tee -a /etc/profile.d/nvm.sh /root/.bashrc /home/admin/.bashrc
 
 # Change ownership so admin can use nvm
 RUN chown -R admin:admin /usr/local/nvm
+RUN chown -R admin:admin /home/admin/.bashrc
 
+RUN composer global require laravel/installer
+RUN echo 'export PATH="$HOME/.config/composer/vendor/bin:$PATH"' >> $HOME/.bashrc \
+          source $HOME/.bashrc
 
+USER admin
+RUN echo 'export PATH="$HOME/.config/composer/vendor/bin:$PATH"' >> $HOME/.bashrc \
+          source $HOME/.bashrc
 
+USER root
 # --- Lunch Server
 RUN mkdir /lunch
 COPY ./start.sh /lunch/

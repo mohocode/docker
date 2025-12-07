@@ -56,7 +56,7 @@ RUN apt-get -y install git
 
 
 #-------------------------------------
-# PHP 8.2 Begins Here
+# PHP 8.4 Begins Here
 # Install dependencies
 #-------------------------------------
 RUN apt-get -y install software-properties-common
@@ -68,66 +68,66 @@ RUN add-apt-repository -y ppa:ondrej/php
 RUN apt-get update
 
 #---------------------------------------------------------
-# Install PHP 8 on Ubuntu 18.24 LTS with predined timezone
+# Install PHP 8 on Ubuntu 18.44 LTS with predined timezone
 #---------------------------------------------------------
-RUN DEBIAN_FRONTEND=noninteractive TZ=Asia/Tehran apt-get -y install php8.2
+RUN DEBIAN_FRONTEND=noninteractive TZ=Asia/Tehran apt-get -y install php8.4
 
 #-------------------------------------------
 # Install PHP 8 Extension
 # dis
-# abled one : php8.2-mysql , 
+# abled one : php8.4-mysql , 
 # First install the more time consuming one
 #-------------------------------------------
-RUN apt -y install php8.2
+RUN apt -y install php8.4
 
-#--------- Then switch Back to PHP 8.2 ----------
-RUN update-alternatives --set php /usr/bin/php8.2
-
-
-#-------------------------------------------
-# Set Variable php.ini
-#-------------------------------------------
-ENV MAX_EXECUTION_TIME 60
-ENV MAX_INPUT_TIME 120
-ENV MEMORY_LIMIT 256M
-ENV POST_MAX_SIZE 16M
-ENV UPOAD_MAX_FILEZIE 8M
-ENV MAX_FILE_UPLOADS 50
+#--------- Then switch Back to PHP 8.4 ----------
+RUN update-alternatives --set php /usr/bin/php8.4
 
 
 #-------------------------------------------
 # Set Variable php.ini
 #-------------------------------------------
+ENV MAX_EXECUTION_TIME=60
+ENV MAX_INPUT_TIME=120
+ENV MEMORY_LIMIT=256M
+ENV POST_MAX_SIZE=16M
+ENV UPOAD_MAX_FILEZIE=8M
+ENV MAX_FILE_UPLOADS=50
 
-COPY ./config/apache/php.ini /etc/php/8.2/apache2/php.ini
+
+#-------------------------------------------
+# Set Variable php.ini
+#-------------------------------------------
+
+COPY ./config/apache/php.ini /etc/php/8.4/apache2/php.ini
 
 #---- Refresh Index----
 RUN apt-get update
 
 #------- Add reamaining extensions --------
-RUN apt-get -y install php8.2-common \ 
-    php8.2-xml \
-    php8.2-xmlrpc \
-    php8.2-curl \
-    php8.2-gd \
-    php8.2-imagick \
-    php8.2-cli  \
-    php8.2-imap \
-    php8.2-mbstring \
-    php8.2-opcache \
-    php8.2-soap \
-    php8.2-zip \
-    php8.2-intl
+RUN apt-get -y install php8.4-common \ 
+    php8.4-xml \
+    php8.4-xmlrpc \
+    php8.4-curl \
+    php8.4-gd \
+    php8.4-imagick \
+    php8.4-cli  \
+    php8.4-imap \
+    php8.4-mbstring \
+    php8.4-opcache \
+    php8.4-soap \
+    php8.4-zip \
+    php8.4-intl
 
 
 #-------------------------------------------
 # Install PHP 8 Extension
 # MYSQL 
 #-------------------------------------------
-RUN apt-get -y install php8.2-mongodb
+RUN apt-get -y install php8.4-mongodb
 RUN apt-get update && apt-get install -y \
-    php8.2-mysql \
-    php8.2-pgsql
+    php8.4-mysql \
+    php8.4-pgsql
 
 
 

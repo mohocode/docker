@@ -28,7 +28,7 @@ COPY ./.bashrc /home/node/.bashrc
 WORKDIR /home/node/app
 
 
-EXPOSE 4500
+EXPOSE 4200
 
 CMD [ "top" ]
 
